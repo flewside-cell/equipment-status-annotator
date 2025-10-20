@@ -1,6 +1,27 @@
 {
-  "defaults": {
-    "status": "unknown"
+  "legend": {
+    "ok": "#22c55e",
+    "warn": "#f59e0b",
+    "err": "#ef4444",
+    "off": "#6b7280"
   },
-  "nodes": {}
+  "objects": [
+    {
+      "name": "Pump_P101",
+      "label": "Насос P-101",
+      "status": "ok",
+      "href": "https://example.com/assets/P-101"
+    },
+    {
+      "name": "HeatExchanger_E201",
+      "label": "Теплообменник E-201",
+      "status": "warn",
+      "href": "https://example.com/assets/E-201"
+    },
+    {
+      "name": "Valve_V15",
+      "label": "Клапан V-15",
+      "status": "off"
+    }
+  ]
 }
