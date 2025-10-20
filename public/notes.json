@@ -1,0 +1,31 @@
+{
+  "hotspots": [
+    {
+      "id": "psu",
+      "label": "Узел питания",
+      "sub": "Номинал: 24 V / 5 A",
+      "position": [0.15, 0.42, 0.05],
+      "normal":   [0, 1, 0],
+      "offset": [12, -12],
+      "link": null
+    },
+    {
+      "id": "led-run",
+      "label": "Индикация состояния",
+      "sub": "Светодиод «RUN»",
+      "position": [-0.32, 0.58, -0.12],
+      "normal":   [0, 1, 0],
+      "offset": [12, -12],
+      "link": null
+    },
+    {
+      "id": "manual",
+      "label": "Паспорт узла",
+      "sub": "manual.pdf",
+      "position": [0.05, 0.28, -0.25],
+      "normal":   [0, 1, 0],
+      "offset": [12, -12],
+      "link": "manual.pdf"
+    }
+  ]
+}
