@@ -1,25 +1,16 @@
 {
   "name": "equipment-status-annotator",
   "version": "1.0.0",
-  "private": false,
-  "type": "module",
+  "private": true,
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d dist -b gh-pages"
-  },
-  "dependencies": {
-    "@react-three/drei": "^9.101.3",
-    "@react-three/fiber": "^8.15.18",
-    "qrcode": "^1.5.4",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "three": "^0.164.1"
+    "deploy": "gh-pages -d dist -b gh-pages -r https://github.com/flewside-cell/equipment-status-annotator.git"
   },
   "devDependencies": {
-    "@vitejs/plugin-react": "^4.2.0",
     "gh-pages": "^6.1.1",
-    "vite": "^5.4.1"
+    "three": "^0.168.0",
+    "vite": "^5.4.0"
   }
+}
