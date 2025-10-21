@@ -7,8 +7,10 @@ function param(name: string, fallback: string) {
   const u = new URL(window.location.href)
   return u.searchParams.get(name) || fallback
 }
-const modelURL    = param('model',    `${import.meta.env.BASE_URL}model.glb`)
-const statusesURL = param('statuses', `${import.meta.env.BASE_URL}statuses.json`)
+
+// 🔧 ФИКС: подгружаем новую модель из public/model3.glb
+const modelURL    = '/model3.glb'
+const statusesURL = param('statuses', '/statuses.json')
 
 // ---------- Сцена ----------
 const renderer = new THREE.WebGLRenderer({ antialias: true })
@@ -138,6 +140,11 @@ renderer.domElement.addEventListener('click', (e) => {
 
 // ---------- Resize ----------
 window.addEventListener('resize', () => {
+  camera.aspect = window.innerWidth / window.innerHeight
+  camera.updateProjectionMatrix()
+  renderer.setSize(window.innerWidth, window.innerHeight)
+})
+
   camera.aspect = window.innerWidth / window.innerHeight
   camera.updateProjectionMatrix()
   renderer.setSize(window.innerWidth, window.innerHeight)
