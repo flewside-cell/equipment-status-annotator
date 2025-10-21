@@ -2,15 +2,21 @@
 import * as THREE from 'three'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 
-// ---------- URL-параметры ----------
+// ---------- Хелперы ----------
 function param(name: string, fallback: string) {
   const u = new URL(window.location.href)
   return u.searchParams.get(name) || fallback
 }
 
-// 🔧 ФИКС: подгружаем новую модель из public/model3.glb
-const modelURL    = '/model3.glb'
-const statusesURL = param('statuses', '/statuses.json')
+// ВАЖНО: на GitHub Pages BASE_URL = '/equipment-status-annotator/'
+// Все ассеты из public/ адресуем относительно BASE_URL.
+const BASE = import.meta.env.BASE_URL // например '/equipment-status-annotator/'
+
+// --- ЖЁСТКО фиксируем модель из public/model3.glb, без override из URL ---
+const modelURL = `${BASE}model3.glb?v=${Date.now()}`
+
+// statuses.json также из public/, override оставим, но с корректным BASE:
+const statusesURL = param('statuses', `${BASE}statuses.json?v=${Date.now()}`)
 
 // ---------- Сцена ----------
 const renderer = new THREE.WebGLRenderer({ antialias: true })
@@ -57,10 +63,8 @@ function applyStatusColor(mesh: THREE.Mesh, rec?: StatusRec) {
 
 function annotate(root: THREE.Object3D) {
   root.traverse(obj => {
-    // работаем по мешам
     // @ts-ignore
     if (obj?.isMesh) {
-      // гарантируем материал
       // @ts-ignore
       if (!obj.material) obj.material = new THREE.MeshStandardMaterial({ color: 0x9ca3af })
       const rec = statusByName.get(obj.name)
@@ -69,7 +73,6 @@ function annotate(root: THREE.Object3D) {
         obj.userData.statusRec = rec
         applyStatusColor(obj as THREE.Mesh, rec)
       }
-      // улучшение hit-тестов
       // @ts-ignore
       obj.raycast = THREE.Mesh.prototype.raycast
       // @ts-ignore
@@ -80,17 +83,28 @@ function annotate(root: THREE.Object3D) {
 
 // ---------- Загрузка ----------
 const gltfLoader = new GLTFLoader()
+console.log('[Annotator] Loading model from:', modelURL)
 
 Promise.all([
   loadStatuses(),
   new Promise<THREE.Object3D>((resolve, reject) => {
-    gltfLoader.load(modelURL, (gltf) => resolve(gltf.scene), undefined, reject)
+    gltfLoader.load(
+      modelURL,
+      (gltf) => resolve(gltf.scene),
+      undefined,
+      (err) => {
+        console.error(`GLTF load error for "${modelURL}":`, err)
+        reject(err)
+      }
+    )
   })
 ]).then(([_, root]) => {
   scene.add(root)
   annotate(root)
   animate()
-}).catch(console.error)
+}).catch((e) => {
+  console.error('Startup error:', e)
+})
 
 // ---------- Рендер ----------
 function animate() {
@@ -145,7 +159,3 @@ window.addEventListener('resize', () => {
   renderer.setSize(window.innerWidth, window.innerHeight)
 })
 
-  camera.aspect = window.innerWidth / window.innerHeight
-  camera.updateProjectionMatrix()
-  renderer.setSize(window.innerWidth, window.innerHeight)
-})
